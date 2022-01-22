@@ -1,0 +1,3 @@
+[submodule "pace-integration"]
+	path = pace-integration
+	url = https://github.com/pace-neutrons/pace-integration

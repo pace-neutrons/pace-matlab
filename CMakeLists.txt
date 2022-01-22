@@ -1,0 +1,28 @@
+cmake_minimum_required (VERSION 3.12)
+
+project("pace-matlab")
+
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+set(CMAKE_MACOSX_RPATH TRUE)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+include(PACE)
+
+add_custom_target(mk_tbx_folder ALL)
+add_custom_command(
+    TARGET mk_tbx_folder PRE_BUILD
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/merge_dirs.sh" "${HORACE_WIN_BINARY_DIR}" "${HORACE_LNX_BINARY_DIR}"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/copy_and_remove_0.sh" "${HORACE_WIN_BINARY_DIR}/Horace" "${CMAKE_CURRENT_BINARY_DIR}/mltbx"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/copy_and_remove_0.sh" "${HORACE_WIN_BINARY_DIR}/Herbert" "${CMAKE_CURRENT_BINARY_DIR}/mltbx"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/copy_and_remove_0.sh" "${SPINW_BINARY_DIR}/swfiles" "${CMAKE_CURRENT_BINARY_DIR}/mltbx/spinw"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/copy_and_remove_0.sh" "${SPINW_BINARY_DIR}/dat_files" "${CMAKE_CURRENT_BINARY_DIR}/mltbx/spinw"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/copy_and_remove_0.sh" "${SPINW_BINARY_DIR}/external" "${CMAKE_CURRENT_BINARY_DIR}/mltbx/spinw"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/copy_init_files.sh" "${HORACE_WIN_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/mltbx"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/extract_mltbx.sh" "${BRILLEM_DOWNLOADED_FILE}" "${CMAKE_CURRENT_BINARY_DIR}/mltbx"
+    COMMAND ${BASH_COMMAND} rm -rf "${CMAKE_CURRENT_BINARY_DIR}/mltbx/+light_python_wrapper"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/extract_mltbx.sh" "${EUPHONIC_MATLAB_DOWNLOADED_FILE}" "${CMAKE_CURRENT_BINARY_DIR}/mltbx"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/create_init.sh" "${CMAKE_CURRENT_BINARY_DIR}/mltbx"
+    COMMAND ${BASH_COMMAND} "${CMAKE_MODULE_PATH}/create_mltbx.sh" "${CMAKE_MODULE_PATH}/pace.prj" "${CMAKE_CURRENT_BINARY_DIR}/mltbx"
+)
