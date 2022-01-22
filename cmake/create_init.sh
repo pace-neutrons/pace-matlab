@@ -14,6 +14,7 @@ function on()
     %
     % This will add paths for Horace, Herbert and SpinW.
     % To access euphonic use: euphonic.<command>
+    if isunix(), py.sys.setdlopenflags(int32(10)); end
     horace_on();
     addpath(genpath(fullfile(fileparts(mfilename('fullpath')), '..', 'spinw')));
 end
